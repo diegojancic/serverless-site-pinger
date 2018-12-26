@@ -1,8 +1,11 @@
 import os
+import boto3
 import ping
 
 
 ENV_VAR_PREFIX = 'PINGURL_'
+cloudwatch = boto3.client('cloudwatch')
+
 
 def lambda_handler(context):
 
@@ -17,6 +20,43 @@ def lambda_handler(context):
 
     results = ping.fetch_all(url_list)
     print (results)
+
+    # Post metrics to CloudWatch
+    post_to_cw(results)
+
+
+def post_to_cw(results):
+    """
+    SAMPLE results:
+    [{'metric': 'TESTSERVER.Latency', 'value': 1.2175002098083496},
+    {'metric': 'TESTSERVER.ErrorRate', 'value': 2.35},
+    {'metric': 'TESTSERVER.ActiveUsers', 'value': 531.0},
+    {'metric': 'SSLERROR.Latency', 'value': 9999.0}]
+    """
+
+    cwdata = []
+    for res in results:
+        metric_unit = 'Seconds' if '.Latency' in res['metric'] else 'None'
+        metric_parts = res["metric"].split('.')
+        site_name = metric_parts[0]
+        metric_name = metric_parts[1]
+
+        cwdata.append({
+            'MetricName': metric_name,
+            'Dimensions': [
+                {
+                    'Name': 'Site',
+                    'Value': site_name
+                },
+            ],
+            'Unit': metric_unit,
+            'Value': res['value']
+        })
+
+    cloudwatch.put_metric_data(
+        MetricData=cwdata,
+        Namespace='SiteMonitoring'
+    )
 
 
 def get_ping_urls():
