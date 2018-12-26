@@ -1,0 +1,23 @@
+{
+    "production": {
+        "apigateway_enabled": false,
+        "app_function": "app.lambda_handler",
+        "aws_region": "us-east-1",
+        "profile_name": "default",
+        "project_name": "sitepinger",
+        "runtime": "python3.6",
+        "s3_bucket": "[S3-BUCKET-NAME]",
+        "events": [
+            {
+                "function": "app.lambda_handler",
+                "expression": "rate(2 minute)"
+            }
+        ],
+        "keep_warm": false,
+        "lambda_description": "Pings sites and posts metrics to CloudWatch",
+        "aws_environment_variables": {
+            "PINGURL_EXAMPLE-COM": "https://example-1.com/ping",
+            "PINGURL_ANOTHER-SERVER": "https://example-2.com/ping?key=secure-key"
+        }
+    }
+}
