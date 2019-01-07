@@ -73,6 +73,7 @@ def get_ping_urls():
 if __name__ == '__main__':
     # Set sample URLS
     os.environ[ENV_VAR_PREFIX + "TestServer"] = 'http://localhost:5000/ping'
+    os.environ[ENV_VAR_PREFIX + "TestServerBadResp"] = 'http://localhost:5000/ping-bad-response'
     os.environ[ENV_VAR_PREFIX + "SslError"] = 'https://expired.badssl.com/'
 
     lambda_handler(None)

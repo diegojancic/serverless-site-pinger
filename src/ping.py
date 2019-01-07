@@ -35,11 +35,14 @@ def fetch_url(name, url, results):
     lines = list(map(str.strip, filter(None, response_text.split("\n"))))
     metrics = list(map(lambda l: l.split(':'), lines))
 
-    for m in metrics:
-        results.append({
-                        'metric': name + "." + m[0],
-                        'value': float(m[1].strip())
-                    })
+    try:
+        for m in metrics:
+            results.append({
+                            'metric': name + "." + m[0],
+                            'value': float(m[1].strip())
+                        })
+    except:
+        print ('ERROR: Unable to parse received output. Output: {output}'.format(output=response_text))
 
 
 def fetch_all(url_list):
