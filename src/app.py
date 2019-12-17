@@ -66,9 +66,10 @@ def get_ping_urls():
     for v in vars:
         name = v[len(ENV_VAR_PREFIX):]
         options = {
-            latencyOnly: name[-1:] == '!'
+            'latencyOnly': name[-1:] == '!'
         }
-        if (options.latencyOnly) name = name[:-1]
+        if options['latencyOnly']:
+            name = name[:-1]
         url_list.append({
             'name': v[len(ENV_VAR_PREFIX):],
             'url': os.environ[v],

@@ -31,7 +31,7 @@ def fetch_url(name, url, options, results):
                     'value': time.time() - start
                 })
     
-    if options.latencyOnly: return
+    if options['latencyOnly']: return
 
     # remove empty lines (filter); remove \n from the end (strip); convert to list
     lines = list(map(str.strip, filter(None, response_text.split("\n"))))
@@ -50,8 +50,8 @@ def fetch_url(name, url, options, results):
 def fetch_all(url_list):
     """
     url_list = [
-        {'name': 'SERVER1', 'url': 'http://site-url-1.com/ping', options: {latencyOnly: true}},
-        {'name': 'SERVER2', 'url': 'http://site-url-2.com/ping?key=secure-key', options: {latencyOnly: false}}
+        {'name': 'SERVER1', 'url': 'http://site-url-1.com/ping', options: {'latencyOnly': true}},
+        {'name': 'SERVER2', 'url': 'http://site-url-2.com/ping?key=secure-key', options: {'latencyOnly': false}}
     ]
     """
     results = []
