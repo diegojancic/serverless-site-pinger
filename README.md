@@ -46,6 +46,14 @@ ANOTHER-SERVER.ActiveUsers = 531
 
 The first part of the metric (before the `.`), corresponds to the env var name (after the `PINGURL_` prefix). The latency metric is always sent, and is sent as 9999 if there's an error while making the request. Also, for each line returned, a new metric is created and sent to CloudWatch.
 
+To monitor only the latency of the page and not analyze the response, the environment variable name must end with an exclamation mark (!). For example:
+
+```
+export PINGURL_SITENAME!=http://example.com/ping
+```
+
+By using `PINGURL_SITENAME!` (note it ends with !), the script will ping the site and only record the latency in CloudWatch.
+
 
 # Monitored Servers
 
