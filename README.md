@@ -11,7 +11,7 @@ Small Python script that pings own sites and posts returned metrics (in addition
 1. On a shell navigate to the project directory and run:
   1. `cd src`
   1. `virtualenv env`
-  1. `source env\bin\activate` (Linux) or `env\Scripts\activate.bat` (Windows)
+  1. `source env/bin/activate` (Linux) or `env\Scripts\activate.bat` (Windows)
   1. `pip install -r requirements.txt`
 
 # Settings Servers to Monitor

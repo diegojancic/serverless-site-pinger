@@ -10,7 +10,7 @@ http = urllib3.PoolManager(
     ca_certs=certifi.where(),
     timeout=20.0)
 
-def fetch_url(name, url, results):
+def fetch_url(name, url, options, results):
     start = time.time()
 
     # Make the request
@@ -30,6 +30,8 @@ def fetch_url(name, url, results):
                     'metric': name + ".Latency",
                     'value': time.time() - start
                 })
+    
+    if options.latencyOnly: return
 
     # remove empty lines (filter); remove \n from the end (strip); convert to list
     lines = list(map(str.strip, filter(None, response_text.split("\n"))))
@@ -48,13 +50,13 @@ def fetch_url(name, url, results):
 def fetch_all(url_list):
     """
     url_list = [
-        {'name': 'SERVER1', 'url': 'http://site-url-1.com/ping'},
-        {'name': 'SERVER2', 'url': 'http://site-url-2.com/ping?key=secure-key'}
+        {'name': 'SERVER1', 'url': 'http://site-url-1.com/ping', options: {latencyOnly: true}},
+        {'name': 'SERVER2', 'url': 'http://site-url-2.com/ping?key=secure-key', options: {latencyOnly: false}}
     ]
     """
     results = []
 
-    threads = [threading.Thread(target=fetch_url, args=(url["name"], url["url"], results))
+    threads = [threading.Thread(target=fetch_url, args=(url["name"], url["url"], url["options"], results))
                     for url in url_list]
     for thread in threads:
         thread.start()
