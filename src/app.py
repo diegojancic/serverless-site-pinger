@@ -11,8 +11,8 @@ def lambda_handler(context):
 
     """
     url_list = [
-        {'name': 'SERVER1', 'url': 'http://site-url-1.com/ping'},
-        {'name': 'SERVER2', 'url': 'http://site-url-2.com/ping?key=secure-key'}
+        {'name': 'SERVER1', 'url': 'http://site-url-1.com/ping', options: {latencyOnly: true}},
+        {'name': 'SERVER2', 'url': 'http://site-url-2.com/ping?key=secure-key', options: {latencyOnly: false}}
     ]
     """
     url_list = get_ping_urls()
@@ -64,9 +64,16 @@ def get_ping_urls():
     vars = [var for var in os.environ if var.startswith(ENV_VAR_PREFIX)]
     url_list = []
     for v in vars:
+        name = v[len(ENV_VAR_PREFIX):]
+        options = {
+            'latencyOnly': name[-1:] == '!'
+        }
+        if options['latencyOnly']:
+            name = name[:-1]
         url_list.append({
             'name': v[len(ENV_VAR_PREFIX):],
-            'url': os.environ[v]
+            'url': os.environ[v],
+            'options': options
         })
     return url_list
 
